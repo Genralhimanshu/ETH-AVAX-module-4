@@ -1,38 +1,36 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-         //import
+
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract UniqueToken is ERC20, ERC20Burnable, Ownable {
-    string[] public arr;
-
-    constructor() ERC20("Degen", "DGN") {
-        arr = ["Custom Position 1", "Custom Position 2", "Custom Position 3"];
+contract DegenGaming is ERC20, Ownable {
+    constructor() ERC20("Degen ", "DGN") {
+        _mint(msg.sender, 1000 * 10 ** decimals()); 
     }
 
-    function redeem(uint256 _position, uint256 _price) public payable {
-        require(_position < arr.length, "Invalid position");
-        require(balanceOf(msg.sender) >= _price, "Insufficient balance");
-        _burn(_msgSender(), _price);
-        
+ 
+    function mint(address account, uint256 amount) public onlyOwner {
+        _mint(account, amount);
     }
 
-    function transfer(address _beneficiary, uint256 _price) public override returns (bool) {
-        require(_price > 0, "Price should be greater than zero.");
-        _transfer(_msgSender(), _beneficiary, _price);
-       
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
+        _transfer(msg.sender, recipient, amount);
         return true;
     }
 
-    function mint(address _beneficiary, uint256 _amount) external onlyOwner {
-        _mint(_beneficiary, _amount);
-        
+    function redeem(uint256 amount) public {
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        _burn(msg.sender, amount);
     }
 
-    function checkBalance(address account) external view returns (uint256) {
-        return balanceOf(account);
-       
+    function getBalance() public view returns (uint256) {
+        return balanceOf(msg.sender);
+    }
+
+ 
+    function burn(uint256 amount) public {
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        _burn(msg.sender, amount);
     }
 }
