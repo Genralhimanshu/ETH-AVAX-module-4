@@ -18,9 +18,8 @@ DegenToken is an ERC20 token contract deployed on the Avalanche network. It prov
 
 
 ## Tools Used
+Remix etherum
 Computer
-NodeJS
-Hardhat
 Solidity
 ## Functionality
 A new token is created on Avalanche Fuji Testnet.
