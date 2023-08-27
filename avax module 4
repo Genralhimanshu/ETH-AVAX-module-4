@@ -5,11 +5,12 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DegenGaming is ERC20, Ownable {
+    mapping(address => uint256) public prizeCosts;
+
     constructor() ERC20("Degen ", "DGN") {
         _mint(msg.sender, 1000 * 10 ** decimals()); 
     }
 
- 
     function mint(address account, uint256 amount) public onlyOwner {
         _mint(account, amount);
     }
@@ -19,18 +20,27 @@ contract DegenGaming is ERC20, Ownable {
         return true;
     }
 
-    function redeem(uint256 amount) public {
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
-        _burn(msg.sender, amount);
+    function setPrizeCost(address prize, uint256 cost) public onlyOwner {
+        prizeCosts[prize] = cost;
+    }
+
+    function redeem(address prize) public {
+        uint256 cost = prizeCosts[prize];
+        require(cost > 0, "Prize not available");
+        require(balanceOf(msg.sender) >= cost, "Insufficient balance");
+
+        _burn(msg.sender, cost);
+        emit PrizeRedeemed(msg.sender, prize, cost);
     }
 
     function getBalance() public view returns (uint256) {
         return balanceOf(msg.sender);
     }
 
- 
     function burn(uint256 amount) public {
         require(balanceOf(msg.sender) >= amount, "Insufficient balance");
         _burn(msg.sender, amount);
     }
+
+    event PrizeRedeemed(address indexed user, address indexed prize, uint256 cost);
 }
