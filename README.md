@@ -23,7 +23,7 @@ NodeJS
 Hardhat
 Solidity
 ## Functionality
-A new token is created on Avalanche Fuji Testnet
+A new token is created on Avalanche Fuji Testnet.
 
 ## License
 This project is licensed under the MIT License.
